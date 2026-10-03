@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultados | La L@gunita</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v=20261002-2">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body class="dashboard-page">
+  <header class="dashboard-header">
+    <div class="dashboard-brand">
+      <img src="{{ url_for('static', filename='img/logo_lagunita.png') }}" alt="Logo La L@gunita">
+      <div>
+        <small>Papelería La L@gunita</small>
+        <h1>Resultados de la encuesta</h1>
+      </div>
+    </div>
+    <div class="dashboard-actions">
+      <a class="secondary-btn" href="{{ url_for('admin_survey_preview') }}">Ver encuesta</a>
+      <a class="danger-btn" href="{{ url_for('admin_logout') }}">Cerrar sesión</a>
+    </div>
+  </header>
+
+  <main class="dashboard-main">
+    <section class="summary-grid">
+      <article class="summary-card">
+        <span>Total de respuestas</span>
+        <strong>{{ total }}</strong>
+      </article>
+      <article class="summary-card">
+        <span>Preguntas analizadas</span>
+        <strong>30</strong>
+      </article>
+      <article class="summary-card">
+        <span>Actualización</span>
+        <strong>Automática</strong>
+      </article>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="section-title-row">
+        <div>
+          <small>Tendencias y relación</small>
+          <h2>Vista general</h2>
+        </div>
+      </div>
+      <div class="charts-grid overview-grid">
+        <article class="chart-card">
+          <h3>Respuestas recibidas a lo largo del tiempo</h3>
+          <p class="chart-caption">Gráfico de líneas con área para observar la tendencia diaria de participación.</p>
+          <div class="chart-holder"><canvas id="trendChart"></canvas></div>
+        </article>
+        <article class="chart-card">
+          <h3>Relación entre rango de edad y gasto por visita</h3>
+          <p class="chart-caption">Gráfico de dispersión exploratorio; los rangos se representan mediante valores medios aproximados.</p>
+          <div class="chart-holder"><canvas id="scatterChart"></canvas></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="results-toolbar">
+        <div>
+          <small>Resultados por pregunta</small>
+          <h2>Gráficas y tablas</h2>
+          <p>Puede consultar cada pregunta como gráfica o como tabla de frecuencias y porcentajes.</p>
+        </div>
+        <div class="view-switch" role="group" aria-label="Cambiar vista de resultados">
+          <button id="viewChartsBtn" class="secondary-btn view-btn active" type="button">Gráficas</button>
+          <button id="viewTablesBtn" class="secondary-btn view-btn" type="button">Tablas</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-section" id="chartsSection">
+      <div class="section-title-row">
+        <div>
+          <small>Resultados por pregunta</small>
+          <h2>Gráficas por pregunta</h2>
+        </div>
+      </div>
+      <div id="chartsGrid" class="charts-grid">
+        <div class="loading">Cargando resultados…</div>
+      </div>
+    </section>
+
+    <section class="dashboard-section hidden" id="tablesSection">
+      <div class="section-title-row">
+        <div>
+          <small>Tablas de frecuencia</small>
+          <h2>Resultados tabulados</h2>
+        </div>
+      </div>
+      <div id="tablesGrid" class="tables-grid">
+        <div class="loading">Cargando tablas…</div>
+      </div>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="section-title-row">
+        <div>
+          <small>Preguntas abiertas</small>
+          <h2>Respuestas textuales</h2>
+        </div>
+      </div>
+      <div id="openAnswers" class="open-answers"></div>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="section-title-row">
+        <div>
+          <small>Actividad reciente</small>
+          <h2>Últimas respuestas</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Fecha y hora</th></tr></thead>
+          <tbody>
+            {% for item in latest %}
+            <tr><td>#{{ item['id'] }}</td><td>{{ item['created_at'] }}</td></tr>
+            {% else %}
+            <tr><td colspan="2">Todavía no hay respuestas.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>
